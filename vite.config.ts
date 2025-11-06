@@ -6,6 +6,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
+  base: mode === 'production' ? '/partymate-inventory/' : '/',
   server: {
     host: "::",
     port: 8080,
@@ -23,8 +24,8 @@ export default defineConfig(({ mode }) => ({
         theme_color: '#000000',
         background_color: '#ffffff',
         display: 'standalone',
-        scope: '/',
-        start_url: '/',
+        scope: mode === 'production' ? '/partymate-inventory/' : '/',
+        start_url: mode === 'production' ? '/partymate-inventory/' : '/',
         icons: [
           {
             src: 'pwa-192x192.png',
