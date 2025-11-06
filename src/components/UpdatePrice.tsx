@@ -8,12 +8,28 @@ import { toast } from "sonner";
 import { ArrowLeft, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+interface SparePart {
+  id: string;
+  part_id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  image_url?: string;
+}
+
 export function UpdatePrice() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedPart, setSelectedPart] = useState<any>(null);
+  const [selectedPart, setSelectedPart] = useState<SparePart | null>(null);
   const [newPrice, setNewPrice] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const isValidPrice = (price: string) => {
+    const trimmed = price.trim();
+    if (!trimmed) return false;
+    const parsed = parseFloat(trimmed);
+    return Number.isFinite(parsed) && parsed >= 0;
+  };
 
   const handleSearch = async () => {
     try {
@@ -37,17 +53,25 @@ export function UpdatePrice() {
   const handleUpdate = async () => {
     if (!selectedPart || !newPrice) return;
 
+    const trimmedPrice = newPrice.trim();
+    const parsedPrice = parseFloat(trimmedPrice);
+
+    if (!Number.isFinite(parsedPrice) || parsedPrice < 0) {
+      toast.error("Please enter a valid positive price");
+      return;
+    }
+
     setLoading(true);
     try {
       const { error } = await supabase
         .from("spare_parts")
-        .update({ price: parseFloat(newPrice) })
+        .update({ price: parsedPrice })
         .eq("id", selectedPart.id);
 
       if (error) throw error;
 
       toast.success("Price updated successfully!");
-      setSelectedPart({ ...selectedPart, price: parseFloat(newPrice) });
+      setSelectedPart({ ...selectedPart, price: parsedPrice });
     } catch (error: any) {
       toast.error(error.message || "Error updating price");
     } finally {
@@ -115,7 +139,7 @@ export function UpdatePrice() {
 
               <Button
                 onClick={handleUpdate}
-                disabled={loading || !newPrice}
+                disabled={loading || !isValidPrice(newPrice)}
                 className="w-full"
               >
                 {loading ? "Updating..." : "Update Price"}

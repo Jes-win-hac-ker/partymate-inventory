@@ -74,7 +74,7 @@ const ContextMenuItem = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Item> & {
     inset?: boolean;
   }
->(({ className, inset, ...props }, ref) => (
+>(({ className, inset, children, ...props }, ref) => (
   <ContextMenuPrimitive.Item
     ref={ref}
     className={cn(
@@ -83,7 +83,9 @@ const ContextMenuItem = React.forwardRef<
       className,
     )}
     {...props}
-  />
+  >
+    {children}
+  </ContextMenuPrimitive.Item>
 ));
 ContextMenuItem.displayName = ContextMenuPrimitive.Item.displayName;
 

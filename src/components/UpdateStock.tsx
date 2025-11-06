@@ -38,7 +38,12 @@ export function UpdateStock() {
 
     setLoading(true);
     try {
-      const change = parseInt(quantityChange);
+      const change = parseInt(quantityChange, 10);
+      if (!Number.isInteger(change) || change <= 0) {
+        toast.error("Please enter a valid positive integer for quantity change");
+        return;
+      }
+
       const newQuantity =
         operation === "add"
           ? selectedPart.quantity + change

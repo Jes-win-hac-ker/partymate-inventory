@@ -32,8 +32,6 @@ export function AddPart() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
-      console.log("User ID:", user.id); // Debug log
-
       let imageUrl = null;
 
       // Upload image if provided
@@ -41,14 +39,11 @@ export function AddPart() {
         const fileExt = imageFile.name.split(".").pop();
         const fileName = `${user.id}/${Date.now()}.${fileExt}`;
         
-        console.log("Attempting to upload file:", fileName); // Debug log
-        
         const { error: uploadError } = await supabase.storage
           .from("part-images")
           .upload(fileName, imageFile);
 
         if (uploadError) {
-          console.error("Upload error details:", uploadError); // Debug log
           throw new Error(`Image upload failed: ${uploadError.message}`);
         }
 
@@ -68,8 +63,6 @@ export function AddPart() {
         image_url: imageUrl,
         user_id: user.id,
       };
-      
-      console.log("Inserting data:", insertData); // Debug log
       
       const { error } = await supabase.from("spare_parts").insert(insertData);
 

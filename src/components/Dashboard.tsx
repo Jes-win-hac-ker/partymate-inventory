@@ -5,10 +5,21 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Package, TrendingDown, Plus, RefreshCw, DollarSign, Eye } from "lucide-react";
 
+interface Part {
+  id: string;
+  part_id: string;
+  name: string;
+  quantity: number;
+  price: number;
+  image_url?: string;
+  created_at: string;
+  user_id: string;
+}
+
 interface DashboardStats {
   totalParts: number;
   lowStockCount: number;
-  recentParts: any[];
+  recentParts: Part[];
 }
 
 export function Dashboard() {
@@ -33,7 +44,7 @@ export function Dashboard() {
 
       if (error) throw error;
 
-      const lowStock = parts?.filter((p) => p.quantity < 5) || [];
+      const lowStock = parts?.filter((p: Part) => p.quantity < 5) || [];
       const recent = parts?.slice(0, 5) || [];
 
       setStats({

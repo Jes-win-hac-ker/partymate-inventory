@@ -29,13 +29,18 @@ export function Auth() {
         toast.success("Logged in successfully!");
         navigate("/"); // Redirect to dashboard after successful login
       } else {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
         });
         if (error) throw error;
-        toast.success("Account created! You can now log in.");
-        setIsLogin(true); // Switch to login mode after signup
+        if (data.session) {
+          toast.success("Account created and logged in successfully!");
+          navigate("/");
+        } else {
+          toast.success("Account created! You can now log in.");
+          setIsLogin(true); // Switch to login mode after signup
+        }
       }
     } catch (error: any) {
       toast.error(error.message || "An error occurred");

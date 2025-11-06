@@ -12,7 +12,12 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
     const stored = localStorage.getItem("theme");
-    return (stored as Theme) || "light";
+    // Validate stored value against allowed Theme values
+    if (stored === "light" || stored === "dark") {
+      return stored;
+    }
+    // Fall back to "light" for invalid or missing values
+    return "light";
   });
 
   useEffect(() => {

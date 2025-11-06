@@ -15,6 +15,9 @@ const Index = () => {
       } else {
         setLoading(false);
       }
+    }).catch((error) => {
+      console.error("Failed to get session:", error);
+      navigate("/login");
     });
 
     const {

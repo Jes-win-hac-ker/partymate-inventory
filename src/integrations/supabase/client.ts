@@ -5,12 +5,48 @@ import type { Database } from './types';
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
+// Validate environment variables
+if (!SUPABASE_URL || typeof SUPABASE_URL !== 'string' || SUPABASE_URL.trim() === '') {
+  throw new Error(
+    'Missing or invalid VITE_SUPABASE_URL environment variable. ' +
+    'Please check your .env file and ensure VITE_SUPABASE_URL is set to a valid Supabase URL.'
+  );
+}
+
+if (!SUPABASE_PUBLISHABLE_KEY || typeof SUPABASE_PUBLISHABLE_KEY !== 'string' || SUPABASE_PUBLISHABLE_KEY.trim() === '') {
+  throw new Error(
+    'Missing or invalid VITE_SUPABASE_PUBLISHABLE_KEY environment variable. ' +
+    'Please check your .env file and ensure VITE_SUPABASE_PUBLISHABLE_KEY is set to a valid Supabase publishable key.'
+  );
+}
+
+// Use validated environment variables
+const validatedUrl = SUPABASE_URL.trim();
+const validatedKey = SUPABASE_PUBLISHABLE_KEY.trim();
+
+// SSR-safe storage helper
+const getStorage = () => {
+  if (typeof window !== 'undefined' && typeof window.localStorage !== 'undefined') {
+    try {
+      // Test localStorage availability (some browsers/modes might block it)
+      window.localStorage.setItem('__test__', 'test');
+      window.localStorage.removeItem('__test__');
+      return window.localStorage;
+    } catch {
+      // localStorage is blocked or unavailable, return null
+      return null;
+    }
+  }
+  // Not in browser environment or localStorage not available
+  return null;
+};
+
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
-export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+export const supabase = createClient<Database>(validatedUrl, validatedKey, {
   auth: {
-    storage: localStorage,
+    storage: getStorage(),
     persistSession: true,
     autoRefreshToken: true,
   }
