@@ -1,10 +1,18 @@
-name: Deploy PWA to Vercel
+name: Deploy PWA to Vercel (Disabled)
+
+# Temporarily disabled - uncomment when Vercel secrets are configured
+# Required secrets: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
+# To enable: 
+#   1. Set up secrets in GitHub repo settings
+#   2. Uncomment the "on:" trigger below and comment out workflow_dispatch
+# on:
+#   push:
+#     branches: [ main ]
+#   pull_request:
+#     branches: [ main ]
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch: # Manual trigger only
 
 jobs:
   deploy:
