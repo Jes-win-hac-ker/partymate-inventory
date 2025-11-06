@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { toast } from "sonner";
 import { ArrowLeft, Search, Plus, Minus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { ImageModal } from "@/components/ui/image-modal";
 
 export function UpdateStock() {
   const navigate = useNavigate();
@@ -14,6 +15,11 @@ export function UpdateStock() {
   const [selectedPart, setSelectedPart] = useState<any>(null);
   const [quantityChange, setQuantityChange] = useState("");
   const [loading, setLoading] = useState(false);
+  const [imageModal, setImageModal] = useState<{ isOpen: boolean; imageUrl: string; title: string }>({
+    isOpen: false,
+    imageUrl: "",
+    title: "",
+  });
 
   const handleSearch = async () => {
     try {
@@ -98,7 +104,12 @@ export function UpdateStock() {
                   <img
                     src={selectedPart.image_url}
                     alt={selectedPart.name}
-                    className="h-20 w-20 object-cover rounded"
+                    className="h-20 w-20 object-cover rounded cursor-pointer hover:opacity-80 transition-opacity"
+                    onClick={() => setImageModal({
+                      isOpen: true,
+                      imageUrl: selectedPart.image_url,
+                      title: `${selectedPart.name} (${selectedPart.part_id})`,
+                    })}
                   />
                 )}
                 <div className="flex-1">
@@ -146,6 +157,13 @@ export function UpdateStock() {
           )}
         </CardContent>
       </Card>
+
+      <ImageModal
+        isOpen={imageModal.isOpen}
+        onClose={() => setImageModal({ isOpen: false, imageUrl: "", title: "" })}
+        imageUrl={imageModal.imageUrl}
+        title={imageModal.title}
+      />
     </div>
   );
 }

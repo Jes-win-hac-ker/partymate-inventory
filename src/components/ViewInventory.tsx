@@ -24,6 +24,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { ImageModal } from "@/components/ui/image-modal";
 
 export function ViewInventory() {
   const navigate = useNavigate();
@@ -32,6 +33,11 @@ export function ViewInventory() {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [imageModal, setImageModal] = useState<{ isOpen: boolean; imageUrl: string; title: string }>({
+    isOpen: false,
+    imageUrl: "",
+    title: "",
+  });
 
   useEffect(() => {
     loadParts();
@@ -144,7 +150,12 @@ export function ViewInventory() {
                         <img
                           src={part.image_url}
                           alt={part.name}
-                          className="h-12 w-12 object-cover rounded"
+                          className="h-12 w-12 object-cover rounded cursor-pointer hover:opacity-80 transition-opacity"
+                          onClick={() => setImageModal({
+                            isOpen: true,
+                            imageUrl: part.image_url,
+                            title: `${part.name} (${part.part_id})`,
+                          })}
                         />
                       ) : (
                         <div className="h-12 w-12 bg-muted rounded flex items-center justify-center text-xs text-muted-foreground">
@@ -207,6 +218,13 @@ export function ViewInventory() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <ImageModal
+        isOpen={imageModal.isOpen}
+        onClose={() => setImageModal({ isOpen: false, imageUrl: "", title: "" })}
+        imageUrl={imageModal.imageUrl}
+        title={imageModal.title}
+      />
     </div>
   );
 }
