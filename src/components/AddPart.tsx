@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { ArrowLeft, Upload } from "lucide-react";
+import { ArrowLeft, Upload, Camera } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export function AddPart() {
@@ -18,6 +18,19 @@ export function AddPart() {
     price: "",
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [showCamera, setShowCamera] = useState(false);
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setImageFile(file);
+    setShowCamera(false);
+  };
+
+  const handleCameraCapture = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setImageFile(file);
+    setShowCamera(false);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -143,19 +156,59 @@ export function AddPart() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="image">Part Image (Optional)</Label>
-              <div className="flex items-center gap-4">
-                <Input
-                  id="image"
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => setImageFile(e.target.files?.[0] || null)}
-                  className="flex-1"
-                />
+              <Label>Part Image (Optional)</Label>
+              <div className="space-y-3">
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowCamera(false)}
+                    className="flex-1"
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Upload Photo
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowCamera(true)}
+                    className="flex-1"
+                  >
+                    <Camera className="h-4 w-4 mr-2" />
+                    Take Photo
+                  </Button>
+                </div>
+                
+                {!showCamera ? (
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileSelect}
+                    className="w-full"
+                  />
+                ) : (
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    capture="environment"
+                    onChange={handleCameraCapture}
+                    className="w-full"
+                  />
+                )}
+                
                 {imageFile && (
-                  <div className="text-sm text-muted-foreground flex items-center gap-2">
-                    <Upload className="h-4 w-4" />
-                    {imageFile.name}
+                  <div className="flex items-center gap-2 p-2 bg-muted rounded-md">
+                    <Upload className="h-4 w-4 text-green-600" />
+                    <span className="text-sm text-muted-foreground">{imageFile.name}</span>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setImageFile(null)}
+                      className="ml-auto h-6 w-6 p-0"
+                    >
+                      ×
+                    </Button>
                   </div>
                 )}
               </div>
