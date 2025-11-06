@@ -221,13 +221,13 @@ export function AddPart() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="price">Price ($)</Label>
+                <Label htmlFor="price">Price (₹)</Label>
                 <Input
                   id="price"
                   type="number"
                   step="0.01"
                   min="0"
-                  placeholder="29.99"
+                  placeholder="299.99"
                   value={formData.price}
                   onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                   required

@@ -157,7 +157,7 @@ export function Dashboard() {
                     <div className="text-sm text-muted-foreground">ID: {part.part_id}</div>
                   </div>
                   <div className="text-right">
-                    <div className="font-medium">${part.price}</div>
+                    <div className="font-medium">₹{part.price}</div>
                     <div className={`text-sm ${part.quantity < 5 ? "text-warning" : "text-muted-foreground"}`}>
                       Qty: {part.quantity}
                     </div>

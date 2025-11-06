@@ -119,13 +119,13 @@ export function UpdatePrice() {
                   <p className="text-sm text-muted-foreground">ID: {selectedPart.part_id}</p>
                   <p className="text-sm text-muted-foreground">Quantity: {selectedPart.quantity}</p>
                   <p className="text-sm font-medium mt-2">
-                    Current Price: ${selectedPart.price}
+                    Current Price: ₹{selectedPart.price}
                   </p>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="price">New Price ($)</Label>
+                <Label htmlFor="price">New Price (₹)</Label>
                 <Input
                   id="price"
                   type="number"

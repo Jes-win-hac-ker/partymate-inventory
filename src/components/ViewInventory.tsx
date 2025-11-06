@@ -173,7 +173,7 @@ export function ViewInventory() {
                         {part.quantity < 5 && " (Low)"}
                       </span>
                     </TableCell>
-                    <TableCell>${part.price}</TableCell>
+                    <TableCell>₹{part.price}</TableCell>
                     <TableCell className="text-sm text-muted-foreground">
                       {new Date(part.updated_at).toLocaleDateString()}
                     </TableCell>

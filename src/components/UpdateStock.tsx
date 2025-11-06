@@ -115,7 +115,7 @@ export function UpdateStock() {
                 <div className="flex-1">
                   <h3 className="font-semibold text-lg">{selectedPart.name}</h3>
                   <p className="text-sm text-muted-foreground">ID: {selectedPart.part_id}</p>
-                  <p className="text-sm text-muted-foreground">Price: ${selectedPart.price}</p>
+                  <p className="text-sm text-muted-foreground">Price: ₹{selectedPart.price}</p>
                   <p className={`text-sm font-medium mt-2 ${selectedPart.quantity < 5 ? "text-warning" : ""}`}>
                     Current Quantity: {selectedPart.quantity}
                   </p>
