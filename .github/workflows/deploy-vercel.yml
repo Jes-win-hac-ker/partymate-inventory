@@ -29,9 +29,10 @@ jobs:
         VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
         VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
         VITE_SUPABASE_PROJECT_ID: ${{ secrets.VITE_SUPABASE_PROJECT_ID }}
+        VITE_BASE_PATH: /
         
     - name: Deploy to Vercel
-      uses: vercel/action@v1
+      uses: amondnet/vercel-action@v25
       with:
         vercel-token: ${{ secrets.VERCEL_TOKEN }}
         vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}

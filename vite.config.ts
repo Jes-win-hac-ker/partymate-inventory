@@ -5,29 +5,38 @@ import { componentTagger } from "lovable-tagger";
 import { VitePWA } from 'vite-plugin-pwa';
 
 // Helper function to normalize base path
-const normalizeBasePath = (path: string): string => {
-  if (!path || path === '/') return '/';
+const normalizeBasePath = (inputPath: string): string => {
+  if (!inputPath || inputPath === '/') return '/';
   
   // Ensure leading slash
-  if (!path.startsWith('/')) {
-    path = '/' + path;
+  if (!inputPath.startsWith('/')) {
+    inputPath = '/' + inputPath;
   }
   
   // Ensure trailing slash
-  if (!path.endsWith('/')) {
-    path = path + '/';
+  if (!inputPath.endsWith('/')) {
+    inputPath = inputPath + '/';
   }
   
-  return path;
+  return inputPath;
 };
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   // Check for environment variable override, fallback to mode-based value
   const envBasePath = process.env.VITE_BASE_PATH || process.env.BASE_PATH;
-  const basePath = envBasePath 
-    ? normalizeBasePath(envBasePath)
-    : mode === 'production' ? '/partymate-inventory/' : '/';
+  
+  let basePath: string;
+  if (envBasePath) {
+    // Environment variable override takes precedence
+    basePath = normalizeBasePath(envBasePath);
+  } else if (process.env.VERCEL) {
+    // Vercel deployment - always use root path
+    basePath = '/';
+  } else {
+    // Default mode-based logic (GitHub Pages uses /partymate-inventory/)
+    basePath = mode === 'production' ? '/partymate-inventory/' : '/';
+  }
 
   return {
     base: basePath,
