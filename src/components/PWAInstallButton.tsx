@@ -60,7 +60,7 @@ export function PWAInstallButton() {
       }
     } else {
       alert(
-        '🚀 Install PartyMate Inventory:\n\n' +
+        '🚀 Install Inventory Pro:\n\n' +
         '📱 Manual Installation:\n' +
         '• Look for the install icon (⬇️) in your browser\'s address bar\n' +
         '• Or use your browser menu to find "Install" or "Add to Home Screen"\n\n' +

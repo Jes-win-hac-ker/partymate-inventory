@@ -1,4 +1,15 @@
-# Welcome to your Lovable project
+# Inventory Pro
+
+A professional inventory management system built with React, TypeScript, and Supabase.
+
+## Features
+
+- **Inventory Management**: Track parts, quantities, and prices
+- **Real-time Updates**: Live inventory updates with Supabase
+- **Progressive Web App**: Install as a native app on any device
+- **Responsive Design**: Works seamlessly on desktop and mobile
+- **Secure Authentication**: User login and registration
+- **Professional Interface**: Clean, modern UI with shadcn/ui components
 
 ## Project info
 

@@ -51,9 +51,9 @@ export default defineConfig(({ mode }) => {
         registerType: 'autoUpdate',
         includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'pwa-192x192.png', 'pwa-512x512.png'],
         manifest: {
-          name: 'PartyMate Inventory',
-          short_name: 'PartyMate',
-          description: 'Auto parts inventory management system',
+          name: 'Inventory Pro',
+          short_name: 'InventoryPro',
+          description: 'Professional inventory management system',
           theme_color: '#000000',
           background_color: '#ffffff',
           display: 'standalone',

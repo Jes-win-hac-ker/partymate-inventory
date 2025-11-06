@@ -1,7 +1,7 @@
 {
-  "name": "PartyMate Inventory",
-  "short_name": "PartyMate",
-  "description": "Auto parts inventory management system",
+  "name": "Inventory Pro",
+  "short_name": "InventoryPro",
+  "description": "Professional inventory management system",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",

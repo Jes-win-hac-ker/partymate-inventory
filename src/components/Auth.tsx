@@ -56,7 +56,7 @@ export function Auth() {
           <div className="mx-auto mb-4 h-16 w-16 rounded-full bg-accent/10 flex items-center justify-center">
             <Wrench className="h-8 w-8 text-accent" />
           </div>
-          <CardTitle className="text-2xl">Auto Parts Manager</CardTitle>
+          <CardTitle className="text-2xl">Inventory Pro</CardTitle>
           <CardDescription>
             {isLogin ? "Login to manage your inventory" : "Create an account to get started"}
           </CardDescription>
