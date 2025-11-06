@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { PWAInstallButton } from "./PWAInstallButton";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -55,6 +56,7 @@ export function Layout({ children }: LayoutProps) {
         </div>
       </header>
       <main className="container mx-auto px-4 py-8">{children}</main>
+      <PWAInstallButton />
     </div>
   );
 }

@@ -24,8 +24,15 @@ export function AddPart() {
     setLoading(true);
 
     try {
+      // Check session first
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError) throw new Error("Session error: " + sessionError.message);
+      if (!session) throw new Error("No active session");
+
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
+
+      console.log("User ID:", user.id); // Debug log
 
       let imageUrl = null;
 
@@ -34,11 +41,16 @@ export function AddPart() {
         const fileExt = imageFile.name.split(".").pop();
         const fileName = `${user.id}/${Date.now()}.${fileExt}`;
         
+        console.log("Attempting to upload file:", fileName); // Debug log
+        
         const { error: uploadError } = await supabase.storage
           .from("part-images")
           .upload(fileName, imageFile);
 
-        if (uploadError) throw uploadError;
+        if (uploadError) {
+          console.error("Upload error details:", uploadError); // Debug log
+          throw new Error(`Image upload failed: ${uploadError.message}`);
+        }
 
         const { data: { publicUrl } } = supabase.storage
           .from("part-images")
@@ -48,14 +60,18 @@ export function AddPart() {
       }
 
       // Insert part
-      const { error } = await supabase.from("spare_parts").insert({
+      const insertData = {
         part_id: formData.partId,
         name: formData.name,
         quantity: parseInt(formData.quantity),
         price: parseFloat(formData.price),
         image_url: imageUrl,
         user_id: user.id,
-      });
+      };
+      
+      console.log("Inserting data:", insertData); // Debug log
+      
+      const { error } = await supabase.from("spare_parts").insert(insertData);
 
       if (error) throw error;
 
