@@ -18,18 +18,20 @@ export function AddPart() {
     price: "",
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [showCamera, setShowCamera] = useState(false);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     setImageFile(file);
-    setShowCamera(false);
   };
 
-  const handleCameraCapture = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
-    setImageFile(file);
-    setShowCamera(false);
+  const triggerFileUpload = () => {
+    const fileInput = document.getElementById('file-upload') as HTMLInputElement;
+    fileInput?.click();
+  };
+
+  const triggerCameraCapture = () => {
+    const cameraInput = document.getElementById('camera-capture') as HTMLInputElement;
+    cameraInput?.click();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -162,7 +164,7 @@ export function AddPart() {
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => setShowCamera(false)}
+                    onClick={triggerFileUpload}
                     className="flex-1"
                   >
                     <Upload className="h-4 w-4 mr-2" />
@@ -171,7 +173,7 @@ export function AddPart() {
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => setShowCamera(true)}
+                    onClick={triggerCameraCapture}
                     className="flex-1"
                   >
                     <Camera className="h-4 w-4 mr-2" />
@@ -179,22 +181,22 @@ export function AddPart() {
                   </Button>
                 </div>
                 
-                {!showCamera ? (
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileSelect}
-                    className="w-full"
-                  />
-                ) : (
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    capture="environment"
-                    onChange={handleCameraCapture}
-                    className="w-full"
-                  />
-                )}
+                {/* Hidden file inputs */}
+                <Input
+                  id="file-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileSelect}
+                  className="hidden"
+                />
+                <Input
+                  id="camera-capture"
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  onChange={handleFileSelect}
+                  className="hidden"
+                />
                 
                 {imageFile && (
                   <div className="flex items-center gap-2 p-2 bg-muted rounded-md">
