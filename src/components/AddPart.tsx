@@ -20,9 +20,13 @@ export function AddPart() {
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   const compressImage = (file: File, maxSizeMB: number = 5): Promise<File> => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        reject(new Error('Failed to get canvas context'));
+        return;
+      }
       const img = new Image();
       
       img.onload = () => {
@@ -47,7 +51,7 @@ export function AddPart() {
         canvas.height = height;
         
         // Draw and compress
-        ctx?.drawImage(img, 0, 0, width, height);
+        ctx.drawImage(img, 0, 0, width, height);
         
         // Start with high quality and reduce until under size limit
         let quality = 0.9;
@@ -64,15 +68,22 @@ export function AddPart() {
                 quality -= 0.1;
                 tryCompress();
               } else {
+                URL.revokeObjectURL(img.src);
                 resolve(compressedFile);
               }
             } else {
-              resolve(file); // Fallback to original if compression fails
+              URL.revokeObjectURL(img.src);
+              reject(new Error('Failed to create blob from canvas'));
             }
           }, 'image/jpeg', quality);
         };
         
         tryCompress();
+      };
+      
+      img.onerror = () => {
+        URL.revokeObjectURL(img.src);
+        reject(new Error('Failed to load image'));
       };
       
       img.src = URL.createObjectURL(file);
