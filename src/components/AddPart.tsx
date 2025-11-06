@@ -19,9 +19,87 @@ export function AddPart() {
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
-    setImageFile(file);
+  const compressImage = (file: File, maxSizeMB: number = 5): Promise<File> => {
+    return new Promise((resolve) => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      
+      img.onload = () => {
+        // Calculate new dimensions to maintain aspect ratio
+        const maxWidth = 1920;
+        const maxHeight = 1920;
+        let { width, height } = img;
+        
+        if (width > height) {
+          if (width > maxWidth) {
+            height = (height * maxWidth) / width;
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width = (width * maxHeight) / height;
+            height = maxHeight;
+          }
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        
+        // Draw and compress
+        ctx?.drawImage(img, 0, 0, width, height);
+        
+        // Start with high quality and reduce until under size limit
+        let quality = 0.9;
+        const tryCompress = () => {
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const compressedFile = new File([blob], file.name, {
+                type: 'image/jpeg',
+                lastModified: Date.now(),
+              });
+              
+              // If still too large and quality can be reduced, try again
+              if (compressedFile.size > maxSizeMB * 1024 * 1024 && quality > 0.1) {
+                quality -= 0.1;
+                tryCompress();
+              } else {
+                resolve(compressedFile);
+              }
+            } else {
+              resolve(file); // Fallback to original if compression fails
+            }
+          }, 'image/jpeg', quality);
+        };
+        
+        tryCompress();
+      };
+      
+      img.src = URL.createObjectURL(file);
+    });
+  };
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) {
+      setImageFile(null);
+      return;
+    }
+
+    try {
+      // Show loading toast
+      toast.loading("Compressing image...", { id: "compress" });
+      
+      const compressedFile = await compressImage(file, 5);
+      setImageFile(compressedFile);
+      
+      // Show success with file size info
+      const sizeMB = (compressedFile.size / (1024 * 1024)).toFixed(2);
+      toast.success(`Image compressed to ${sizeMB}MB`, { id: "compress" });
+    } catch (error) {
+      toast.error("Failed to compress image", { id: "compress" });
+      setImageFile(file); // Use original if compression fails
+    }
   };
 
   const triggerFileUpload = () => {
@@ -201,7 +279,12 @@ export function AddPart() {
                 {imageFile && (
                   <div className="flex items-center gap-2 p-2 bg-muted rounded-md">
                     <Upload className="h-4 w-4 text-green-600" />
-                    <span className="text-sm text-muted-foreground">{imageFile.name}</span>
+                    <div className="flex flex-col flex-1">
+                      <span className="text-sm text-muted-foreground">{imageFile.name}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {(imageFile.size / (1024 * 1024)).toFixed(2)} MB
+                      </span>
+                    </div>
                     <Button
                       type="button"
                       variant="ghost"
